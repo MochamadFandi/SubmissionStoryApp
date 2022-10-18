@@ -79,8 +79,8 @@
             android:background="@drawable/bg_card_blue"
             android:drawablePadding="4dp"
             android:gravity="center"
-            android:paddingVertical="4dp"
             android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
             android:text="@string/view_map"
             android:textColor="@color/white"
             android:textSize="12sp"
@@ -89,7 +89,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/tv_story" />
 
-        <androidx.viewpager2.widget.ViewPager2
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_story"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -112,30 +112,6 @@
             app:layout_constraintTop_toBottomOf="@id/tv_story"
             app:layout_constraintVertical_bias="0.2" />
 
-        <TextView
-            android:id="@+id/tv_map"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="12dp"
-            android:text="@string/map"
-            android:textColor="@color/blue"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/rv_story" />
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginVertical="12dp"
-            android:background="@drawable/bg_card"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_map"
-            tools:context=".ui.location.LocationFragment" />
 
         <Button
             android:id="@+id/btn_logout"
@@ -153,7 +129,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/map" />
+            app:layout_constraintTop_toBottomOf="@id/rv_story" />
 
         <ProgressBar
             android:id="@+id/progressBar"

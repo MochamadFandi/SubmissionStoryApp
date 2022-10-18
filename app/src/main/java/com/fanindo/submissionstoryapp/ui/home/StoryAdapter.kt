@@ -20,18 +20,6 @@ import com.fanindo.submissionstoryapp.ui.detail.DetailStoryActivity.Companion.EX
 class StoryAdapter :
     PagingDataAdapter<Story, StoryAdapter.ViewHolder>(DiffCallback) {
 
-//    private var listData = ArrayList<StoryItem>()
-//    private lateinit var viewPager2: ViewPager2
-//    var onItemClick: ((StoryItem) -> Unit)? = null
-//
-//    fun setData(newListData: List<StoryItem>?, viewPager2: ViewPager2) {
-//        if (newListData == null) return
-//        listData.clear()
-//        listData.addAll(newListData)
-//        this.viewPager2 = viewPager2
-//        notifyDataSetChanged()
-//    }
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
         ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_story, parent, false))
@@ -42,14 +30,10 @@ class StoryAdapter :
         if (story != null) {
             holder.bind(story)
         }
-
-
     }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = ItemStoryBinding.bind(itemView)
-
-
         fun bind(story: Story) {
             with(binding) {
                 tvName.text = story.name
@@ -87,7 +71,6 @@ class StoryAdapter :
             override fun areContentsTheSame(oldItem: Story, newItem: Story): Boolean {
                 return oldItem == newItem
             }
-
         }
     }
 

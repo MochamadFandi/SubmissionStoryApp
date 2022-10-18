@@ -16,8 +16,8 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.ViewModelProvider
 import androidx.paging.PagingData
-import androidx.viewpager2.widget.ViewPager2
 import com.fanindo.submissionstoryapp.R
+import com.fanindo.submissionstoryapp.adapter.LoadingStateAdapter
 import com.fanindo.submissionstoryapp.data.local.entity.Story
 import com.fanindo.submissionstoryapp.databinding.ActivityHomeBinding
 import com.fanindo.submissionstoryapp.model.UserPreference
@@ -28,18 +28,11 @@ import com.fanindo.submissionstoryapp.ui.welcome.MainActivity
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 
-class HomeActivity : AppCompatActivity()
-//    ,OnMapReadyCallback
-{
+class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
     private lateinit var homeViewModel: HomeViewModel
-
-    //    private lateinit var dialog: DialogFragment
     private lateinit var handler: Handler
-
-    //    private lateinit var mMap: GoogleMap
-//    private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var doubleBackToExitPressedOnce = false
     private var token: String = ""
 
@@ -66,10 +59,6 @@ class HomeActivity : AppCompatActivity()
         }
         supportActionBar?.hide()
         handler = Handler(Looper.myLooper()!!)
-//        val mapFragment = supportFragmentManager
-//            .findFragmentById(R.id.map) as SupportMapFragment
-//        mapFragment.getMapAsync(this)
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     }
 
     private fun setupViewModel() {
@@ -97,14 +86,6 @@ class HomeActivity : AppCompatActivity()
                 setStoryData(stories)
             }
         }
-
-//        homeViewModel.isLoading.observe(this) {
-//            showLoading(it)
-//        }
-//
-//        homeViewModel.errorMessage.observe(this) { error ->
-//            dialog(this, error)
-//        }
     }
 
     private fun setupAction() {
@@ -124,47 +105,15 @@ class HomeActivity : AppCompatActivity()
     private fun setStoryData(stories: PagingData<Story>) {
 
         val adapter = StoryAdapter()
+        binding.rvStory.adapter = adapter.withLoadStateFooter(
+            footer = LoadingStateAdapter {
+                adapter.retry()
+            }
+        )
 
         adapter.submitData(lifecycle, stories)
-        binding.rvStory.adapter = adapter
-        binding.rvStory.clipToPadding = false
-        binding.rvStory.clipChildren = false
-        binding.rvStory.offscreenPageLimit = 2
-        binding.rvStory.getChildAt(0).overScrollMode = View.OVER_SCROLL_NEVER
-
-        binding.rvStory.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                handler.removeCallbacks(runnable)
-                handler.postDelayed(runnable, 4000)
-            }
-        })
 
     }
-
-    override fun onPause() {
-        super.onPause()
-        handler.removeCallbacks(runnable)
-    }
-
-    override fun onResume() {
-        super.onResume()
-        handler.postDelayed(runnable, 4000)
-    }
-
-    private val runnable = Runnable {
-        binding.rvStory.currentItem = binding.rvStory.currentItem + 1
-    }
-
-
-//    private fun showLoading(state: Boolean) {
-//        if (state) {
-//            dialog = MyCustomDialog()
-//            dialog.show(supportFragmentManager, TAG)
-//        } else {
-//            dialog.dismiss()
-//        }
-//    }
 
     override fun onBackPressed() {
         if (doubleBackToExitPressedOnce) {
@@ -175,90 +124,4 @@ class HomeActivity : AppCompatActivity()
         Toast.makeText(this, getString(R.string.double_back), Toast.LENGTH_SHORT).show()
         Handler(Looper.getMainLooper()).postDelayed({ doubleBackToExitPressedOnce = false }, 2000)
     }
-
-//    companion object {
-//        private const val TAG = "HomeActivity"
-//    }
-
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        mMap = googleMap
-//        mMap.uiSettings.apply {
-//            isZoomControlsEnabled = true
-//            isMapToolbarEnabled = true
-//            isCompassEnabled = true
-//        }
-//
-//        getMyLocation()
-//    }
-
-//    private val requestPermissionLauncher =
-//        registerForActivityResult(
-//            ActivityResultContracts.RequestMultiplePermissions()
-//        ) { permissions ->
-//            when {
-//                permissions[Manifest.permission.ACCESS_FINE_LOCATION] ?: false -> {
-//                    // Precise location access granted.
-//                    getMyLocation()
-//                }
-//                permissions[Manifest.permission.ACCESS_COARSE_LOCATION] ?: false -> {
-//                    // Only approximate location access granted.
-//                    getMyLocation()
-//                }
-//                else -> {
-//                    // No location access granted.
-//                }
-//            }
-//        }
-//
-//    private fun checkPermission(permission: String): Boolean {
-//        return ContextCompat.checkSelfPermission(
-//            this,
-//            permission
-//        ) == PackageManager.PERMISSION_GRANTED
-//    }
-//
-//    private fun getMyLocation() {
-//        if (checkPermission(Manifest.permission.ACCESS_FINE_LOCATION) &&
-//            checkPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-//        ) {
-//            mMap.isMyLocationEnabled = true
-//            fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-//                if (location != null) {
-//                    showMarker(location)
-//                } else {
-//                    Toast.makeText(
-//                        this@HomeActivity,
-//                        "Location is not found. Try Again",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
-//            }
-//
-//        } else {
-//            requestPermissionLauncher.launch(
-//                arrayOf(
-//                    Manifest.permission.ACCESS_FINE_LOCATION,
-//                    Manifest.permission.ACCESS_COARSE_LOCATION
-//                )
-//            )
-//
-//        }
-//    }
-
-//    private fun showMarker(location: Location) {
-//        homeViewModel.listStory.observe(this) { stories ->
-//            stories.forEach {
-//                mMap.addMarker(
-//                    MarkerOptions()
-//                        .position(LatLng(it.lat, it.lon))
-//                        .title(it.name)
-//                )
-//            }
-//
-//        }
-//        val myLocation = LatLng(location.latitude, location.longitude)
-//        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(myLocation, 14f))
-//    }
-
-
 }

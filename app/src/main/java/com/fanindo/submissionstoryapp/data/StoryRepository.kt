@@ -17,7 +17,7 @@ class StoryRepository(
         @OptIn(ExperimentalPagingApi::class)
         return Pager(
             config = PagingConfig(
-                pageSize = 10
+                pageSize = 5
             ),
             remoteMediator = StoryRemoteMediator(storyDatabase, apiService, "Bearer $token"),
             pagingSourceFactory = {
@@ -30,7 +30,7 @@ class StoryRepository(
     fun getAllMarker(token: String): Flow<Result<StoryResponse>> = flow {
         try {
             val bearerToken = "Bearer $token"
-            val response = apiService.getAllStories(bearerToken, size = 30, page = 5)
+            val response = apiService.getAllStories(bearerToken, size = 5, page = 5)
             emit(Result.success(response))
         } catch (e: Exception) {
             e.printStackTrace()
